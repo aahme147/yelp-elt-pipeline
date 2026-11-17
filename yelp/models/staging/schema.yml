@@ -1,0 +1,58 @@
+version: 2
+
+models:
+  - name: stg_business
+    columns:
+      - name: business_id
+        tests: [unique, not_null]
+      - name: stars
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 1
+              max_value: 5
+              config:
+                severity: warn
+
+  - name: stg_business_categories
+    columns:
+      - name: business_id
+        tests:
+          - relationships:
+              to: ref('stg_business')
+              field: business_id
+
+  - name: stg_user
+    columns:
+      - name: user_id
+        tests: [unique, not_null]
+
+  - name: stg_review
+    columns:
+      - name: review_id
+        tests: [unique, not_null]
+      - name: business_id
+        tests:
+          - relationships:
+              to: ref('stg_business')
+              field: business_id
+              config:
+                severity: warn
+      - name: user_id
+        tests:
+          - relationships:
+              to: ref('stg_user')
+              field: user_id
+              config:
+                severity: warn
+
+  - name: stg_tip
+    columns:
+      - name: tip_id
+        tests: [unique, not_null]
+
+  - name: stg_checkin
+    columns:
+      - name: business_id
+        tests: [not_null]
+      - name: checkin_at
+        tests: [not_null]

@@ -1,0 +1,31 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# dbt
+yelp/target/
+yelp/dbt_packages/
+yelp/logs/
+target/
+dbt_packages/
+logs/
+
+# Secrets (never commit)
+profiles.yml
+.env
+*.pem
+*.key
+*.p8
+
+# Data files
+*.json
+*.gz
+*.csv
+yelp_staged/
+yelp_feed/
+
+# OS / editor
+.DS_Store
+.vscode/
+zsh/

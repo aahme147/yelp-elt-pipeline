@@ -42,3 +42,32 @@ models:
       - name: category_key
         tests:
           - relationships: {to: ref('dim_category'), field: category_key}
+
+  - name: mart_business_performance
+    description: "One row per business with review, check-in and tip metrics. Each fact is aggregated before joining to avoid fan-out."
+    columns:
+      - name: business_key
+        description: "Surrogate key of the business."
+        tests: [unique, not_null]
+      - name: review_count
+        description: "Total reviews for the business."
+
+  - name: mart_monthly_review_trends
+    description: "One row per calendar year and month: review volume, average stars and active businesses."
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: ['year', 'month']
+
+  - name: mart_category_performance
+    description: "One row per category. A review counts once per category its business belongs to, so category totals must not be added together."
+    columns:
+      - name: category
+        description: "Category name."
+        tests: [unique, not_null]
+
+  - name: mart_user_activity
+    description: "One row per user: reviews written, average stars given, tips written and compliments received."
+    columns:
+      - name: user_key
+        description: "Surrogate key of the user."
+        tests: [unique, not_null]

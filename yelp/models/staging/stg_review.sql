@@ -1,5 +1,15 @@
+{{ config(
+    materialized='incremental',
+    unique_key='review_id',
+    incremental_strategy='merge'
+) }}
+
 with source as (
-    select * from {{ source('raw', 'review_raw') }}
+    select *
+    from {{ source('raw', 'review_raw') }}
+    {% if is_incremental() %}
+    where loaded_at > (select max(loaded_at) from {{ this }})
+    {% endif %}
 ),
 
 deduped as (
@@ -20,6 +30,7 @@ cleaned as (
         try_to_number(v:funny::string)               as funny_votes,
         try_to_number(v:cool::string)                as cool_votes,
         nullif(trim(v:text::string), '')             as review_text,
+        batch_id,
         src_file,
         loaded_at
     from deduped

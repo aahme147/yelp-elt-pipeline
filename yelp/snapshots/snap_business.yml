@@ -1,0 +1,8 @@
+snapshots:
+  - name: snap_business
+    relation: ref('stg_business')
+    config:
+      schema: snapshots
+      unique_key: business_id
+      strategy: check
+      check_cols: [business_name, address, city, state, postal_code, is_open, categories]

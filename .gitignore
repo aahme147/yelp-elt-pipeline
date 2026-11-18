@@ -29,3 +29,4 @@ yelp_feed/
 .DS_Store
 .vscode/
 zsh/
+!airflow/dbt_profiles/profiles.yml
